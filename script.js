@@ -1,21 +1,35 @@
-// スコアの読み込み
-let score = localStorage.getItem("highScore") || 0;
-document.getElementById("highScore").textContent = score;
+document.addEventListener("DOMContentLoaded", function() {
+    let scoreElement = document.getElementById("score");
+    let timeElement = document.getElementById("time");
+    let clickButton = document.getElementById("clickButton");
 
-// ゲームのスコア
-let currentScore = 0;
-document.getElementById("clickButton").addEventListener("click", function() {
-    currentScore++;
-    document.getElementById("score").textContent = currentScore;
-});
+    let score = 0;
+    let timeLeft = 10;
+    let timer;
 
-// ゲーム終了時にスコアを保存
-function endGame() {
-    if (currentScore > score) {
-        localStorage.setItem("highScore", currentScore);
-        document.getElementById("highScore").textContent = currentScore;
+    // ボタンのクリックイベント
+    clickButton.addEventListener("click", function() {
+        if (timeLeft > 0) {
+            score++;
+            scoreElement.textContent = score;
+        }
+    });
+
+    // ゲーム開始
+    function startGame() {
+        console.log("ゲーム開始");
+
+        timer = setInterval(function() {
+            timeLeft--;
+            timeElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                clickButton.disabled = true;
+                alert("ゲーム終了！スコア: " + score);
+            }
+        }, 1000);
     }
-    alert("ゲーム終了！スコア: " + currentScore);
-}
 
-setTimeout(endGame, 10000);
+    startGame();
+});
