@@ -1,25 +1,21 @@
-let score = 0;
-let timeLeft = 10;
-let timer;
+// スコアの読み込み
+let score = localStorage.getItem("highScore") || 0;
+document.getElementById("highScore").textContent = score;
 
+// ゲームのスコア
+let currentScore = 0;
 document.getElementById("clickButton").addEventListener("click", function() {
-    if (timeLeft > 0) {
-        score++;
-        document.getElementById("score").textContent = score;
-    }
+    currentScore++;
+    document.getElementById("score").textContent = currentScore;
 });
 
-function startGame() {
-    timer = setInterval(function() {
-        timeLeft--;
-        document.getElementById("time").textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            document.getElementById("clickButton").disabled = true;
-            alert("ゲーム終了！スコア: " + score);
-        }
-    }, 1000);
+// ゲーム終了時にスコアを保存
+function endGame() {
+    if (currentScore > score) {
+        localStorage.setItem("highScore", currentScore);
+        document.getElementById("highScore").textContent = currentScore;
+    }
+    alert("ゲーム終了！スコア: " + currentScore);
 }
 
-window.onload = startGame;
+setTimeout(endGame, 10000);
